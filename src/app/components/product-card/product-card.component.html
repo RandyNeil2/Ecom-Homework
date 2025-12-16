@@ -1,0 +1,20 @@
+<mat-card class="product-card" [routerLink]="['/shop/products', id]" style="cursor: pointer;">
+  <div class="product-image-container">
+    <mat-icon class="product-image-placeholder">inventory_2</mat-icon>
+  </div>
+  <mat-card-content>
+    <div class="product-info">
+      <h3 class="product-title">{{ name }}</h3>
+      <div class="product-price">{{ price | number: '1.2-2' }} €</div>
+      <span class="stock-indicator stock-in-stock">In Stock</span>
+      <div class="product-meta">
+        <div class="product-rating">
+          <mat-icon>star</mat-icon>
+          <span>{{ avgRating | number: '1.1-1' }}</span>
+        </div>
+        <div class="product-date">{{ formatDate(created_at) }}</div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+

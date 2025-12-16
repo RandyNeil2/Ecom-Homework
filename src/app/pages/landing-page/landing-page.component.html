@@ -1,0 +1,119 @@
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-background">
+    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1920&q=80" alt="Hero Background" class="hero-img">
+    <div class="hero-overlay"></div>
+  </div>
+  
+  <div class="container hero-content">
+    <div class="hero-text-center fade-in-up">
+      <span class="hero-label">Nouvelle Collection</span>
+      <h1 class="hero-title">Appréciez notre grand Catalogue</h1>
+      <p class="hero-subtitle">Curated essentials for the modern individual. Experience quality without compromise.</p>
+      
+      <div class="hero-actions">
+        <a routerLink="/shop/products" class="btn btn-white btn-large">
+          Shop Collection
+        </a>
+        <button *ngIf="!(isLoggedIn$ | async)" (click)="toggleLoginForm()" class="btn btn-outline-white btn-large">
+          Sign In
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal Overlay -->
+  <div *ngIf="showLoginForm" class="login-modal-overlay" (click)="toggleLoginForm()">
+    <div class="login-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Welcome Back</h3>
+        <button mat-icon-button (click)="toggleLoginForm()"><mat-icon>close</mat-icon></button>
+      </div>
+      <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="landing-login-form">
+        <div class="form-field-wrapper">
+          <label class="form-label">Email</label>
+          <div class="input-container">
+            <mat-icon class="input-icon-left">email</mat-icon>
+            <input type="email" formControlName="email" placeholder="demo@example.com" class="form-input" />
+          </div>
+        </div>
+        
+        <div class="form-field-wrapper">
+          <label class="form-label">Password</label>
+          <div class="input-container">
+            <mat-icon class="input-icon-left">lock</mat-icon>
+            <input type="password" formControlName="password" placeholder="Enter password" class="form-input" />
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary btn-full" [disabled]="loginForm.invalid || (loading$ | async)">
+          <mat-spinner *ngIf="loading$ | async" diameter="20" class="spinner-inline"></mat-spinner>
+          <span *ngIf="!(loading$ | async)">Sign In</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Categories -->
+<section class="categories-section">
+  <div class="container">
+    <div class="section-header-center">
+      <span class="section-subtitle">Browse Collections</span>
+      <h2 class="section-title">Curated Categories</h2>
+    </div>
+    
+    <div class="categories-grid">
+      <a *ngFor="let category of categories" 
+         routerLink="/shop/products" 
+         [queryParams]="{category: category.name.toLowerCase()}"
+         class="category-card-premium">
+        <div class="category-bg">
+          <img [src]="category.image" [alt]="category.name">
+          <div class="category-overlay"></div>
+        </div>
+        <div class="category-content">
+          <span class="category-subtitle">{{ category.subtitle }}</span>
+          <h3>{{ category.name }}</h3>
+          <span class="shop-link">Shop Now <mat-icon>arrow_forward</mat-icon></span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Best Sellers / New Arrivals -->
+<section class="products-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">New Arrivals</h2>
+      <a routerLink="/shop/products" class="view-all-link">
+        View All <mat-icon>arrow_forward</mat-icon>
+      </a>
+    </div>
+    <app-products-list
+      [products]="(featuredProducts$ | async) || []"
+      [loading]="false"
+      [error]="null">
+    </app-products-list>
+  </div>
+</section>
+
+<!-- Advantages Section -->
+<section class="advantages-section">
+  <div class="container">
+    <div class="advantages-grid">
+      <div *ngFor="let advantage of advantages" class="advantage-card">
+        <div class="advantage-icon">
+          <mat-icon>{{ advantage.icon }}</mat-icon>
+        </div>
+        <h3>{{ advantage.title }}</h3>
+        <p>{{ advantage.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+
+

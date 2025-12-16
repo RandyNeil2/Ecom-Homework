@@ -1,0 +1,85 @@
+<mat-sidenav-container class="products-container">
+  <mat-sidenav #sidenav mode="side" opened class="filters-sidenav" [fixedInViewport]="false">
+    <div class="filters-header-mobile hidden-desktop">
+      <button mat-icon-button (click)="sidenav.close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    
+    <app-modern-filters
+      [initialFilters]="{
+        search: '',
+        category: 'all',
+        minPrice: 0,
+        maxPrice: 100,
+        sortBy: filterForm.get('ordering')?.value || '-created_at',
+        minRating: filterForm.get('minRating')?.value || 0
+      }"
+      [categoriesList]="categories$ | async"
+      (filtersChange)="onFiltersChange($event)"
+      (clearFilters)="onClearFilters()">
+    </app-modern-filters>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="products-content">
+    <div class="content-wrapper">
+      <div class="products-header">
+        <div>
+          <h1>Our Collection</h1>
+          <p class="subtitle">Curated items just for you</p>
+        </div>
+        <button mat-stroked-button (click)="sidenav.toggle()" class="filter-toggle-btn">
+          <mat-icon>filter_list</mat-icon>
+          {{ sidenav.opened ? 'Hide Filters' : 'Show Filters' }}
+        </button>
+      </div>
+
+      <!-- Loading State (Initial or Empty) -->
+      <div *ngIf="(loading$ | async) && (products$ | async)?.length === 0" class="loading-container">
+        <app-products-list [loading]="true" [products]="[]"></app-products-list>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error$ | async as error" class="error-container">
+        <mat-card class="error-card">
+          <mat-card-content>
+            <mat-icon color="warn" class="error-icon">error_outline</mat-icon>
+            <h3>Oops! Something went wrong</h3>
+            <p>{{ error }}</p>
+            <button mat-raised-button color="primary" (click)="loadProducts()">
+              Try Again
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Products Grid with SWR -->
+      <div *ngIf="(products$ | async)?.length! > 0" class="products-section" [class.is-loading]="loading$ | async">
+        
+        <!-- SWR Loading Indicator -->
+        <div *ngIf="loading$ | async" class="swr-loader">
+          <mat-spinner diameter="30"></mat-spinner>
+          <span>Updating...</span>
+        </div>
+
+        <app-products-list
+          [products]="(products$ | async) || []"
+          [loading]="false"
+          [error]="null">
+        </app-products-list>
+
+        <!-- Pagination -->
+        <div class="pagination-container">
+          <mat-paginator
+            [length]="count$ | async"
+            [pageSize]="(filterForm.get('pageSize')?.value) || 12"
+            [pageIndex]="((filterForm.get('page')?.value) || 1) - 1"
+            [pageSizeOptions]="[12, 24, 48, 96]"
+            (page)="onPageChange($event)"
+            showFirstLastButtons>
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

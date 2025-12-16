@@ -1,0 +1,181 @@
+/* ============================================
+   FILTER CARD – PREMIUM ORANGE EXPERIENCE
+   ============================================ */
+
+/* Container */
+.filter-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 100%;
+  padding: 8px 6px;
+}
+
+/* Header */
+.filter-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+
+  border-bottom: 1px dashed rgba(255, 152, 0, 0.35);
+  position: relative;
+}
+
+.filter-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Icon */
+.filter-icon {
+  color: #ff9800;
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+
+/* Title */
+.filter-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 0;
+
+  color: #6d4c41;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Badge */
+.filter-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  min-height: 20px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff9800, #ffd54f);
+  color: #ffffff;
+}
+
+/* Clear button */
+.clear-button {
+  position: absolute;
+  right: 0;
+  transform: scale(0.8);
+  opacity: 0.75;
+}
+
+.clear-button:hover {
+  opacity: 1;
+}
+
+/* Accordion */
+.filter-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vertical-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Price range */
+.price-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.price-field {
+  flex: 1;
+}
+
+.separator {
+  color: #ffb74d;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.price-slider {
+  width: 100%;
+  margin-top: -4px;
+  padding: 0 10px;
+}
+
+/* Rating chips */
+.rating-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+/* ==========================
+   MATERIAL OVERRIDES
+   ========================== */
+
+::ng-deep .filter-card .mat-expansion-panel {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .filter-card .mat-expansion-panel-header {
+  padding: 0 14px !important;
+  height: 38px !important;
+  justify-content: center !important;
+}
+
+::ng-deep .filter-card .mat-expansion-panel-header-title {
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #6d4c41;
+  letter-spacing: 0.05em;
+  flex: 0 0 auto !important;
+}
+
+::ng-deep .filter-card .mat-expansion-indicator {
+  margin: 0 !important;
+  color: #ffb74d;
+}
+
+::ng-deep .filter-card .mat-mdc-form-field {
+  width: 100%;
+}
+
+::ng-deep .filter-card .mat-mdc-text-field-wrapper {
+  background: linear-gradient(180deg, #ffffff, #fffaf3) !important;
+  padding: 0 12px !important;
+  border-radius: 12px !important;
+  border: 1px solid #f1d6a3 !important;
+}
+
+::ng-deep .filter-card .mat-mdc-form-field-input-control {
+  color: #2b2b2b !important;
+  font-size: 0.85rem !important;
+}
+
+::ng-deep .filter-card .mat-mdc-select-value {
+  color: #2b2b2b !important;
+  font-size: 0.85rem !important;
+}
+
+::ng-deep .filter-card .mat-mdc-radio-button .mdc-label {
+  font-size: 0.85rem;
+  color: #8d6e63;
+}
+
+/* Hide scrollbar */
+::ng-deep .filters-sidenav::-webkit-scrollbar {
+  display: none;
+}
+::ng-deep .filters-sidenav {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

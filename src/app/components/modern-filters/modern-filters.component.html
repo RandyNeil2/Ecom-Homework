@@ -1,0 +1,104 @@
+<div class="filter-card">
+  <div class="filter-header">
+    <div class="filter-title-group">
+      <mat-icon class="filter-icon">tune</mat-icon>
+      <h3 class="filter-title">Refine Results</h3>
+      <mat-chip *ngIf="activeFiltersCount > 0" class="filter-badge" highlighted color="primary">
+        {{ activeFiltersCount }} Active
+      </mat-chip>
+    </div>
+    <button
+      mat-button
+      color="warn"
+      (click)="onClear()"
+      *ngIf="activeFiltersCount > 0"
+      class="clear-button">
+      Clear All
+      <mat-icon iconPositionEnd>clear_all</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="filterForm" class="filter-form">
+    <!-- Search -->
+    <mat-form-field appearance="outline" class="filter-control search-control" subscriptSizing="dynamic">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput type="text" formControlName="search" placeholder="Search Products">
+      <button mat-icon-button matSuffix *ngIf="filterForm.get('search')?.value" (click)="filterForm.get('search')?.setValue('')">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-accordion multi displayMode="flat" class="filter-accordion">
+      <!-- Category Section -->
+      <mat-expansion-panel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Category
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        
+        <mat-radio-group formControlName="category" class="vertical-radio-group">
+          <mat-radio-button *ngFor="let cat of categories" [value]="cat.value" color="primary">
+            {{ cat.label }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-expansion-panel>
+
+      <!-- Price Section -->
+      <mat-expansion-panel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Price Range
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="price-inputs">
+          <mat-form-field appearance="outline" class="price-field" density="compact">
+            <span matPrefix>$&nbsp;</span>
+            <input matInput type="number" formControlName="minPrice" min="0">
+          </mat-form-field>
+          <span class="separator">to</span>
+          <mat-form-field appearance="outline" class="price-field" density="compact">
+            <span matPrefix>$&nbsp;</span>
+            <input matInput type="number" formControlName="maxPrice" min="0">
+          </mat-form-field>
+        </div>
+        <mat-slider min="0" max="1000" step="10" discrete [displayWith]="formatLabel" class="price-slider">
+          <input matSliderStartThumb formControlName="minPrice">
+          <input matSliderEndThumb formControlName="maxPrice">
+        </mat-slider>
+      </mat-expansion-panel>
+
+      <!-- Rating Section -->
+      <mat-expansion-panel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Rating
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-chip-listbox formControlName="minRating" aria-label="Minimum Rating" class="rating-chips">
+          <mat-chip-option [value]="0" selected>Any</mat-chip-option>
+          <mat-chip-option [value]="4">4+ Stars</mat-chip-option>
+          <mat-chip-option [value]="3">3+ Stars</mat-chip-option>
+        </mat-chip-listbox>
+      </mat-expansion-panel>
+
+      <!-- Sort Section -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Sort By
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-radio-group formControlName="sortBy" class="vertical-radio-group">
+          <mat-radio-button *ngFor="let option of sortOptions" [value]="option.value" color="primary">
+            {{ option.label }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </form>
+</div>
+

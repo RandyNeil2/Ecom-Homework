@@ -1,0 +1,25 @@
+<div class="products-list-container">
+  <div *ngIf="error" class="error">Error: {{ error }}</div>
+  
+  <div class="products-grid">
+    <ng-container *ngIf="loading; else productList">
+      <app-product-skeleton *ngFor="let i of [1,2,3,4,5,6,7,8]"></app-product-skeleton>
+    </ng-container>
+    
+    <ng-template #productList>
+      <app-product-card
+        *ngFor="let product of products"
+        [id]="product.id"
+        [name]="product.name"
+        [price]="product.price"
+        [stock]="product.stock"
+        [image]="product.image"
+        [category]="product.category"
+        [description]="product.description"
+        [created_at]="product.created_at"
+        [avgRating]="getAvgRating(product)">
+      </app-product-card>
+    </ng-template>
+  </div>
+</div>
+

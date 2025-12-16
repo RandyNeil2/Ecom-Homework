@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+@import 'tailwindcss';
+
+/* ============================================
+   MY SHOP - PREMIUM THEME
+   ============================================ */
+
+:root {
+  /* Colors - Mapping to Material Tokens where possible */
+  --color-primary: var(--mat-sys-primary);
+  --color-primary-dark: #000051;
+  --color-accent: var(--mat-sys-tertiary);
+
+  --color-background: var(--mat-sys-background);
+  --color-surface: var(--mat-sys-surface);
+
+  --color-text-primary: var(--mat-sys-on-surface);
+  --color-text-secondary: #666666;
+  --color-text-muted: #999999;
+
+  --color-border: var(--mat-sys-outline);
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+
+  /* Typography */
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+}
+
+/* Global Styles */
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  letter-spacing: -0.02em;
+}
+h2 {
+  font-size: 2rem;
+  letter-spacing: -0.01em;
+}
+h3 {
+  font-size: 1.5rem;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--color-accent);
+}
+
+/* Material Overrides for Premium Feel */
+.mat-mdc-card {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+  background: white !important;
+  border: 1px solid rgba(0, 0, 0, 0.03) !important;
+}
+
+.mat-mdc-button-base {
+  border-radius: 8px !important;
+  letter-spacing: 0.5px !important;
+  font-weight: 600 !important;
+  font-family: var(--font-sans) !important;
+}
+
+.mat-mdc-raised-button.mat-primary {
+  --mdc-protected-button-container-color: var(--color-primary) !important;
+  --mdc-protected-button-label-text-color: white !important;
+  box-shadow: 0 4px 12px rgba(26, 35, 126, 0.2) !important;
+  border-radius: 8px !important;
+}
+
+.mat-mdc-form-field-outline {
+  color: rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Utility Classes */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.card-hover {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+/* Fix for MatFormField visibility and style */
+:root {
+  --mdc-filled-text-field-container-color: #ffffff;
+  --mdc-filled-text-field-focus-container-color: #ffffff;
+  --mdc-filled-text-field-label-text-color: #666;
+  --mdc-filled-text-field-focus-label-text-color: var(--color-primary);
+  --mdc-filled-text-field-input-text-color: #ffffff;
+  --mdc-filled-text-field-caret-color: var(--color-primary);
+  --mdc-filled-text-field-active-indicator-color: transparent;
+  --mdc-filled-text-field-container-shape: 12px;
+}
+
+/* Aggressive overrides for Premium Box Look */
+.mat-mdc-form-field {
+  --mdc-filled-text-field-active-indicator-height: 0px;
+  --mdc-filled-text-field-focus-active-indicator-height: 0px;
+  --mdc-filled-text-field-hover-active-indicator-height: 0px;
+}
+
+/* Remove underline completely */
+.mdc-line-ripple {
+  display: none !important;
+}
+
+/* Ensure rounded corners, white background, and subtle border */
+.mdc-text-field--filled {
+  border-radius: 12px !important;
+  background-color: #ffffff !important;
+  border: 1px solid #e0e0e0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Remove focus indicator if present */
+.mdc-text-field--filled::before,
+.mdc-text-field--filled::after {
+  border-bottom: none !important;
+}
+
+/* Ensure form fields have a background if outline style is used */
+.mat-mdc-form-field-subscript-wrapper {
+  background-color: transparent;
+}

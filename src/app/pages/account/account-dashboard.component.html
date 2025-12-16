@@ -1,0 +1,35 @@
+<div class="account-dashboard">
+  <div class="container">
+    <!-- Profile Header -->
+    <div class="profile-header premium-card">
+      <div class="profile-avatar">
+        <div class="avatar-circle">{{ user.avatar }}</div>
+      </div>
+      <div class="profile-info">
+        <h1>{{ user.name }}</h1>
+        <p class="profile-email">{{ user.email }}</p>
+        <button mat-raised-button class="btn btn-outline">
+          <mat-icon>edit</mat-icon>
+          Edit Profile
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel" class="account-tabs">
+      <a mat-tab-link *ngFor="let link of links"
+         [routerLink]="link.path"
+         routerLinkActive #rla="routerLinkActive"
+         [active]="rla.isActive">
+        {{ link.label }}
+      </a>
+    </nav>
+
+    <div class="tab-content">
+      <mat-tab-nav-panel #tabPanel>
+        <router-outlet></router-outlet>
+      </mat-tab-nav-panel>
+    </div>
+  </div>
+</div>
+

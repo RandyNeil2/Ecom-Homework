@@ -1,0 +1,108 @@
+/* ============================================
+   SHARED FORM STYLES – PREMIUM ORANGE GLOW
+   ============================================ */
+
+/* Input Container */
+.input-container-base {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 52px;
+
+  background: linear-gradient(180deg, #ffffff 0%, #fffaf3 100%);
+  border: 1.5px solid #f1d6a3;
+  border-radius: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.input-container-base:hover {
+  border-color: #ffb74d;
+  background: #ffffff;
+}
+
+/* Focus glow effect */
+.input-container-base:focus-within {
+  border-color: #ff9800;
+  box-shadow:
+    0 0 0 3px rgba(255, 152, 0, 0.25),
+    0 8px 24px rgba(255, 152, 0, 0.15);
+  outline: none;
+}
+
+/* Input Icon */
+.input-icon-base {
+  position: absolute;
+  left: 16px;
+  width: 22px;
+  height: 22px;
+  font-size: 22px;
+
+  color: #ffb74d;
+  pointer-events: none;
+  z-index: 1;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* Icon animation on focus */
+.input-container-base:focus-within .input-icon-base {
+  color: #ff9800;
+  transform: scale(1.1);
+}
+
+/* Input Field */
+.input-field-base {
+  flex: 1;
+  height: 100%;
+
+  border: none;
+  outline: none;
+  background: transparent;
+
+  padding: 0 16px 0 52px;
+
+  font-size: 0.95rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 500;
+  color: #2b2b2b;
+}
+
+.input-field-base::placeholder {
+  color: #b08968;
+  font-weight: 400;
+}
+
+/* Error State */
+.input-error-state {
+  border-color: #ef4444 !important;
+  background: #fff5f5;
+}
+
+.input-error-state:focus-within {
+  border-color: #ef4444 !important;
+  box-shadow:
+    0 0 0 3px rgba(239, 68, 68, 0.25),
+    0 8px 24px rgba(239, 68, 68, 0.15) !important;
+}
+
+.input-error-state .input-icon-base {
+  color: #ef4444;
+}
+
+/* Error Text */
+.error-text-base {
+  display: block;
+  margin-top: 6px;
+
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #ef4444;
+
+  line-height: 1.4;
+}

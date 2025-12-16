@@ -1,0 +1,108 @@
+
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+@use '@angular/material' as mat;
+
+// Define a premium palette
+// Primary: Deep Navy Blue
+$premium-primary: (
+  50: #e8eaf6,
+  100: #c5cae9,
+  200: #9fa8da,
+  300: #7986cb,
+  400: #5c6bc0,
+  500: #3f51b5, // Base
+  600: #3949ab,
+  700: #303f9f,
+  800: #283593,
+  900: #1a237e, // Darkest
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  )
+);
+
+// Tertiary: Gold/Amber for accents
+$premium-tertiary: (
+  50: #fff8e1,
+  100: #ffecb3,
+  200: #ffe082,
+  300: #ffd54f,
+  400: #ffca28,
+  500: #ffc107,
+  600: #ffb300,
+  700: #ffa000,
+  800: #ff8f00,
+  900: #ff6f00,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: rgba(black, 0.87),
+    600: rgba(black, 0.87),
+    700: rgba(black, 0.87),
+    800: rgba(black, 0.87),
+    900: rgba(black, 0.87),
+  )
+);
+
+// Define the theme object
+$my-shop-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette, // Keeping azure as base but we will override with CSS vars if needed, or use custom palettes if we want strict M3 control. 
+    // For M3, it's often better to let it generate from a seed color.
+    // Let's stick to the M3 default generation but with our seed colors if possible, 
+    // or just use the provided palettes if we want to be safe.
+    // Actually, let's use the provided azure/blue for now to ensure compatibility, 
+    // but we will inject our "Premium" CSS variables in styles.css.
+    tertiary: mat.$blue-palette,
+  ),
+  typography: (
+    plain-family: 'Inter, sans-serif',
+    brand-family: 'Playfair Display, serif', // Serif for headings gives a premium feel
+    bold-weight: 700,
+    medium-weight: 500,
+    regular-weight: 400,
+  ),
+  density: (
+    scale: 0,
+  )
+));
+
+html {
+  // Apply the theme
+  @include mat.theme($my-shop-theme);
+  
+  // Custom Premium Overrides
+  --mat-sys-primary: #1a237e; // Deep Navy
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-secondary: #303f9f;
+  --mat-sys-on-secondary: #ffffff;
+  --mat-sys-tertiary: #ffa000; // Gold
+  --mat-sys-on-tertiary: #000000;
+  
+  --mat-sys-surface: #ffffff;
+  --mat-sys-on-surface: #1a1a1a;
+  --mat-sys-outline: #e0e0e0;
+  
+  // Add a subtle background tint
+  --mat-sys-background: #f8f9fa;
+}
+
+body {
+  background-color: var(--mat-sys-background);
+  color: var(--mat-sys-on-surface);
+  font-family: var(--mat-sys-body-medium-font);
+}

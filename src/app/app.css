@@ -1,0 +1,17 @@
+/* App Shell */
+.main-content {
+  min-height: calc(100vh - 64px);
+  background-color: var(--color-surface);
+  padding: var(--spacing-xl) 0;
+  padding-top: 90px; /* Header height */
+}
+
+.main-content.home-page {
+  padding-top: 0;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: var(--spacing-md) 0;
+  }
+}
