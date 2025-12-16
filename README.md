@@ -1,21 +1,9 @@
-# 🛍️ LuxeShop - Premium Angular E-Commerce Application
+#Z-Kstore  E-Commerce Application
 
-![Angular](https://img.shields.io/badge/Angular-18+-dd0031.svg?style=for-the-badge&logo=angular&logoColor=white)
-![NgRx](https://img.shields.io/badge/NgRx-State_Management-ba2bd2.svg?style=for-the-badge&logo=ngrx&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Material UI](https://img.shields.io/badge/Material_UI-0081CB?style=for-the-badge&logo=material-ui&logoColor=white)
 
-**LuxeShop** is a state-of-the-art, premium e-commerce platform built with modern web technologies. It delivers a seamless, high-performance shopping experience with a focus on aesthetic excellence and robust architecture.
 
 ---
 
-## ✨ Key Features
-
-### 🎨 **Premium UI/UX**
-*   **Responsive Design:** Fully fluid layout that adapts perfectly to mobile, tablet, and desktop.
-*   **Glassmorphism & Animations:** Subtle micro-interactions, smooth transitions, and modern glass effects.
-*   **Sticky Header:** Dynamic header that adapts to scroll position (transparent to white) for an immersive feel.
-*   **Dark/Light Mode Ready:** Built with CSS variables and Tailwind for easy theming.
 
 ### 🛒 **Shopping Experience**
 *   **Product Catalog:** Dynamic product listing with filtering by category.
@@ -37,24 +25,6 @@
 
 ---
 
-## 🛠️ Tech Stack
-
-*   **Framework:** [Angular 18+](https://angular.io/)
-*   **State Management:** [NgRx](https://ngrx.io/) (Redux pattern)
-*   **Styling:** 
-    *   [Tailwind CSS](https://tailwindcss.com/) (Utility-first)
-    *   [Angular Material](https://material.angular.io/) (Components)
-    *   Custom CSS Variables for theming
-*   **Icons:** Material Icons & SVG
-*   **Tooling:** Angular CLI, ESLint, Prettier
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-*   Node.js (v18 or higher)
-*   npm (v9 or higher)
 
 ### Installation
 
