@@ -1,21 +1,24 @@
 import type { Meta, StoryObj } from '@storybook/angular';
+import { applicationConfig } from '@storybook/angular';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { CartItemComponent } from './cart-item.component';
 import { CartItem } from '../../state/cart/cart.actions';
 import { Product } from '../../../mocks/data';
 
 const sampleProduct: Product = {
   id: 1,
-  name: 'Stylo Bleu',
-  description: 'High quality blue pen',
+  name: 'Stylo Bleu Premium',
+  description: 'High quality blue pen for smooth writing',
   category: 'Stationery',
   price: 2.5,
   created_at: '2025-01-10T10:00:00Z',
   owner_id: 10,
   ratings: [{ user_id: 2, value: 4 }],
   rating: 4,
-  stock: 10,
+  stock: 50,
+  lowStockThreshold: 10,
   image: 'https://images.unsplash.com/photo-1585336261022-680e295ce3fe?auto=format&fit=crop&w=800&q=80',
-  features: ['Feature 1', 'Feature 2']
+  features: ['Smooth ink', 'Ergonomic grip']
 };
 
 const sampleCartItem: CartItem = {
@@ -30,6 +33,13 @@ const meta: Meta<CartItemComponent> = {
   parameters: {
     layout: 'padded',
   },
+  decorators: [
+    applicationConfig({
+      providers: [
+        provideAnimations()
+      ],
+    }),
+  ],
   argTypes: {
     item: {
       control: 'object',
@@ -61,7 +71,8 @@ export const MultipleQuantity: Story = {
     item: {
       product: {
         ...sampleProduct,
-        name: 'Cahier A5',
+        id: 2,
+        name: 'Cahier A5 Luxe',
         price: 3.9,
       },
       quantity: 5,
@@ -74,11 +85,11 @@ export const ExpensiveItem: Story = {
     item: {
       product: {
         ...sampleProduct,
-        name: 'Palette Aquarelle',
+        id: 3,
+        name: 'Palette Aquarelle Pro',
         price: 9.5,
       },
       quantity: 2,
     },
   },
 };
-

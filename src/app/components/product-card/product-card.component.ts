@@ -90,6 +90,11 @@ import { Product } from '../../../mocks/data';
       background: #fff3e0;
       color: #ef6c00;
     }
+    .in-stock {
+      font-size: 12px;
+      font-weight: 600;
+      color: #2e7d32;
+    }
     .product-title {
       font-family: 'Playfair Display', serif;
       font-size: 1.1rem;
@@ -130,6 +135,16 @@ import { Product } from '../../../mocks/data';
       opacity: 0;
       transition: opacity 0.3s ease;
     }
+    .actions-overlay button {
+      background-color: #e53935 !important;
+      color: white !important;
+    }
+    .actions-overlay button mat-icon {
+      color: white !important;
+    }
+    .actions-overlay button:disabled {
+      background-color: #999 !important;
+    }
     .product-card:hover .actions-overlay {
       opacity: 1;
     }
@@ -141,10 +156,16 @@ import { Product } from '../../../mocks/data';
         <img [src]="'https://picsum.photos/seed/' + id + '/400/400'" [alt]="name" class="product-image">
         
         <div class="actions-overlay" (click)="$event.stopPropagation()">
-          <button mat-mini-fab color="accent" matTooltip="Add to Cart" (click)="addToCart.emit()">
-            <mat-icon>add_shopping_cart</mat-icon>
+          <button mat-mini-fab color="warn" matTooltip="Add to Cart" 
+                  (click)="onAddToCart($event)"
+                  [disabled]="stock === 0"
+                  [attr.aria-label]="stock === 0 ? 'Out of stock' : 'Add to cart'">
+            <mat-icon>{{ stock === 0 ? 'remove_shopping_cart' : 'add_shopping_cart' }}</mat-icon>
           </button>
-          <button mat-mini-fab [color]="(isWishlisted$ | async) ? 'warn' : ''" matTooltip="Add to Wishlist" (click)="toggleWishlist($event)">
+          <button mat-mini-fab color="warn" 
+                  matTooltip="Add to Wishlist" 
+                  (click)="toggleWishlist($event)"
+                  [attr.aria-label]="(isWishlisted$ | async) ? 'Remove from wishlist' : 'Add to wishlist'">
             <mat-icon>{{ (isWishlisted$ | async) ? 'favorite' : 'favorite_border' }}</mat-icon>
           </button>
         </div>
@@ -152,9 +173,11 @@ import { Product } from '../../../mocks/data';
 
       <div class="card-content">
         <div class="badges-row">
-          <div class="category-chip">Premium Collection</div>
+          <div class="category-chip">{{ category || 'Premium Collection' }}</div>
           <div *ngIf="stock === 0" class="stock-badge out-of-stock">Out of Stock</div>
-          <div *ngIf="stock > 0 && stock < 5" class="stock-badge low-stock">Low Stock</div>
+          <div *ngIf="stock > 0 && stock <= lowStockThreshold" class="stock-badge low-stock">
+            Only {{ stock }} left
+          </div>
         </div>
         <h3 class="product-title">{{ name }}</h3>
         
@@ -164,7 +187,8 @@ import { Product } from '../../../mocks/data';
         </div>
 
         <div class="price-row">
-          <span class="price">{{ price | currency:'USD' }}</span>
+          <span class="price">{{ price | currency:'EUR' }}</span>
+          <span *ngIf="stock > lowStockThreshold" class="in-stock">In Stock</span>
         </div>
       </div>
     </mat-card>
@@ -181,6 +205,7 @@ export class ProductCardComponent {
   @Input() rating = 0;
   @Input() image = '';
   @Input() stock = 0;
+  @Input() lowStockThreshold = 10;
 
   @Output() addToCart = new EventEmitter<void>();
 
@@ -190,6 +215,13 @@ export class ProductCardComponent {
   ngOnChanges() {
     if (this.id) {
       this.isWishlisted$ = this.store.select(selectIsWishlisted(this.id));
+    }
+  }
+
+  onAddToCart(event: Event) {
+    event.stopPropagation();
+    if (this.stock > 0) {
+      this.addToCart.emit();
     }
   }
 
@@ -203,6 +235,7 @@ export class ProductCardComponent {
       owner_id: 0, // Mock
       ratings: [], // Mock
       stock: this.stock,
+      lowStockThreshold: this.lowStockThreshold,
       description: this.description,
       category: this.category,
       rating: this.rating,

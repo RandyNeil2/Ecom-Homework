@@ -1,14 +1,16 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatStepperModule } from '@angular/material/stepper';
-import { MatDividerModule } from '@angular/material/divider';
-import { selectAllOrders } from '../../../state/orders/orders.selectors';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { selectAllOrders } from '../../../state/orders/orders.selectors';
 import { Order } from '../../../state/orders/orders.actions';
 
 @Component({
@@ -20,225 +22,351 @@ import { Order } from '../../../state/orders/orders.actions';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatStepperModule,
-    MatDividerModule
+    MatChipsModule,
+    MatProgressSpinnerModule,
+    MatTableModule
   ],
   template: `
-    <div class="order-details-container" *ngIf="order$ | async as order; else loading">
-      <div class="header">
-        <a routerLink="/account/orders" class="back-link">
-          <mat-icon>arrow_back</mat-icon> Back to Orders
+    <div class="order-details-page">
+      <div class="page-header">
+        <a routerLink="/account/orders" class="back-link" aria-label="Back to orders">
+          <mat-icon>arrow_back</mat-icon>
+          Back to Orders
         </a>
-        <h1>Order #{{ order.orderNumber }}</h1>
-        <span class="status-badge" [ngClass]="order.status.toLowerCase()">{{ order.status }}</span>
+        <h1>Order Details</h1>
       </div>
 
-      <!-- Tracking Stepper -->
-      <mat-card class="tracking-card premium-card">
-        <mat-card-content>
-          <mat-stepper [selectedIndex]="getStepIndex(order.status)" linear="true">
-            <mat-step label="Processing" state="processing" [completed]="getStepIndex(order.status) >= 0"></mat-step>
-            <mat-step label="Shipped" state="shipped" [completed]="getStepIndex(order.status) >= 1"></mat-step>
-            <mat-step label="Delivered" state="delivered" [completed]="getStepIndex(order.status) >= 2"></mat-step>
-          </mat-stepper>
-        </mat-card-content>
-      </mat-card>
+      <ng-container *ngIf="order$ | async as order; else notFound">
+        <!-- Order Info Card -->
+        <mat-card class="info-card">
+          <div class="order-header">
+            <div>
+              <h2 class="order-number">Order #{{ order.orderNumber }}</h2>
+              <p class="order-date">Placed on {{ order.date | date:'longDate' }}</p>
+            </div>
+            <span class="status-badge" [ngClass]="order.status.toLowerCase()">
+              {{ order.status }}
+            </span>
+          </div>
+        </mat-card>
 
-      <div class="details-grid">
-        <!-- Order Items -->
-        <mat-card class="items-card premium-card">
+        <!-- Items Card -->
+        <mat-card class="items-card">
           <mat-card-header>
-            <mat-card-title>Items</mat-card-title>
+            <mat-card-title>Order Items</mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <div class="order-item" *ngFor="let item of order.items">
-              <div class="item-info">
-                <span class="item-name">{{ item.productName }}</span>
-                <span class="item-meta">Qty: {{ item.quantity }}</span>
-              </div>
-              <span class="item-price">{{ item.price | currency:'EUR' }}</span>
-            </div>
-            <mat-divider></mat-divider>
-            <div class="order-total">
-              <span>Total</span>
-              <span>{{ order.total | currency:'EUR' }}</span>
-            </div>
+            <table mat-table [dataSource]="order.items" class="items-table">
+              <ng-container matColumnDef="product">
+                <th mat-header-cell *matHeaderCellDef>Product</th>
+                <td mat-cell *matCellDef="let item">{{ item.productName }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef>Price</th>
+                <td mat-cell *matCellDef="let item">{{ item.price | currency:'EUR' }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="quantity">
+                <th mat-header-cell *matHeaderCellDef>Qty</th>
+                <td mat-cell *matCellDef="let item">{{ item.quantity }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="total">
+                <th mat-header-cell *matHeaderCellDef>Total</th>
+                <td mat-cell *matCellDef="let item" class="item-total">
+                  {{ item.price * item.quantity | currency:'EUR' }}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
           </mat-card-content>
         </mat-card>
 
-        <!-- Shipping Info -->
-        <mat-card class="shipping-card premium-card">
-          <mat-card-header>
-            <mat-card-title>Shipping Details</mat-card-title>
-          </mat-card-header>
+        <!-- Summary Card -->
+        <div class="summary-grid">
+          <!-- Shipping Address -->
+          <mat-card class="address-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>location_on</mat-icon>
+              <mat-card-title>Shipping Address</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p *ngIf="order.shippingAddress">
+                {{ order.shippingAddress.street }}<br>
+                {{ order.shippingAddress.city }}, {{ order.shippingAddress.zipCode }}<br>
+                {{ order.shippingAddress.country }}
+              </p>
+              <p *ngIf="!order.shippingAddress" class="no-address">
+                No address information available
+              </p>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Order Summary -->
+          <mat-card class="totals-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>receipt</mat-icon>
+              <mat-card-title>Order Summary</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="summary-row">
+                <span>Subtotal</span>
+                <span>{{ getSubtotal(order) | currency:'EUR' }}</span>
+              </div>
+              <div class="summary-row">
+                <span>Shipping</span>
+                <span>{{ 5.99 | currency:'EUR' }}</span>
+              </div>
+              <div class="summary-row">
+                <span>Taxes (20% VAT)</span>
+                <span>{{ getTaxes(order) | currency:'EUR' }}</span>
+              </div>
+              <div class="summary-row discount" *ngIf="getDiscount(order) > 0">
+                <span>Discount</span>
+                <span>-{{ getDiscount(order) | currency:'EUR' }}</span>
+              </div>
+              <div class="summary-row total">
+                <span>Total</span>
+                <span>{{ order.total | currency:'EUR' }}</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </ng-container>
+
+      <ng-template #notFound>
+        <mat-card class="not-found-card">
           <mat-card-content>
-            <div class="info-row">
-              <mat-icon>location_on</mat-icon>
-              <div>
-                <p class="label">Shipping Address</p>
-                <p>{{ order.shippingAddress?.street }}</p>
-                <p>{{ order.shippingAddress?.city }}, {{ order.shippingAddress?.zipCode }}</p>
-                <p>{{ order.shippingAddress?.country }}</p>
-              </div>
-            </div>
-            <div class="info-row">
-              <mat-icon>calendar_today</mat-icon>
-              <div>
-                <p class="label">Order Date</p>
-                <p>{{ order.date | date:'medium' }}</p>
-              </div>
-            </div>
+            <mat-icon>search_off</mat-icon>
+            <h2>Order Not Found</h2>
+            <p>The order you're looking for doesn't exist or has been removed.</p>
+            <a mat-raised-button color="primary" routerLink="/account/orders">
+              View All Orders
+            </a>
           </mat-card-content>
         </mat-card>
-      </div>
+      </ng-template>
     </div>
-
-    <ng-template #loading>
-      <div class="loading-state">
-        <p>Loading order details...</p>
-      </div>
-    </ng-template>
   `,
   styles: [`
-    .order-details-container {
-      padding: 24px;
-      max-width: 1000px;
+    .order-details-page {
+      max-width: 900px;
       margin: 0 auto;
+      padding: 24px 16px;
     }
 
-    .header {
-      margin-bottom: 32px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
+    .page-header {
+      margin-bottom: 24px;
     }
 
     .back-link {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
-      color: #666;
+      color: #1565c0;
       text-decoration: none;
-      margin-right: auto;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
     }
 
-    .header h1 {
-      margin: 0;
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    h1 {
       font-size: 2rem;
+      font-weight: 700;
       color: #1a237e;
+      margin: 0;
+    }
+
+    mat-card {
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      margin-bottom: 24px;
+    }
+
+    .info-card {
+      padding: 24px;
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .order-number {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1a237e;
+      margin: 0 0 8px 0;
+    }
+
+    .order-date {
+      color: #666;
+      margin: 0;
     }
 
     .status-badge {
-      padding: 6px 12px;
+      padding: 8px 16px;
       border-radius: 20px;
+      font-size: 0.8rem;
       font-weight: 600;
       text-transform: uppercase;
-      font-size: 0.875rem;
     }
 
-    .status-badge.processing { background: #fff3e0; color: #ef6c00; }
-    .status-badge.shipped { background: #e3f2fd; color: #1565c0; }
-    .status-badge.delivered { background: #e8f5e9; color: #2e7d32; }
-
-    .tracking-card {
-      margin-bottom: 32px;
+    .status-badge.delivered {
+      background: #e8f5e9;
+      color: #2e7d32;
     }
 
-    .details-grid {
+    .status-badge.shipped {
+      background: #e3f2fd;
+      color: #1565c0;
+    }
+
+    .status-badge.processing {
+      background: #fff3e0;
+      color: #ef6c00;
+    }
+
+    .status-badge.cancelled {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .items-card mat-card-header {
+      margin-bottom: 16px;
+    }
+
+    .items-table {
+      width: 100%;
+    }
+
+    th.mat-header-cell {
+      color: #666;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+
+    .item-total {
+      font-weight: 600;
+    }
+
+    .summary-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 24px;
     }
 
     @media (min-width: 768px) {
-      .details-grid {
-        grid-template-columns: 2fr 1fr;
+      .summary-grid {
+        grid-template-columns: 1fr 1fr;
       }
     }
 
-    .order-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 16px 0;
-      border-bottom: 1px solid #f0f0f0;
-    }
-
-    .order-item:last-child {
-      border-bottom: none;
-    }
-
-    .item-info {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .item-name {
-      font-weight: 500;
+    .address-card mat-card-content p {
+      line-height: 1.8;
       color: #333;
     }
 
-    .item-meta {
-      font-size: 0.875rem;
-      color: #666;
+    .no-address {
+      color: #999;
+      font-style: italic;
     }
 
-    .order-total {
+    .summary-row {
       display: flex;
       justify-content: space-between;
-      padding-top: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .summary-row.total {
       font-size: 1.25rem;
       font-weight: 700;
       color: #1a237e;
+      padding-top: 16px;
+      margin-top: 8px;
+      border-top: 2px solid #1a237e;
+      border-bottom: none;
     }
 
-    .info-row {
-      display: flex;
-      gap: 16px;
+    .summary-row.discount {
+      color: #2e7d32;
+    }
+
+    .not-found-card {
+      text-align: center;
+      padding: 48px;
+    }
+
+    .not-found-card mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: #ccc;
+      margin-bottom: 16px;
+    }
+
+    .not-found-card h2 {
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .not-found-card p {
+      color: #666;
       margin-bottom: 24px;
     }
-
-    .info-row mat-icon {
-      color: #666;
-    }
-
-    .label {
-      font-size: 0.875rem;
-      color: #666;
-      margin-bottom: 4px;
-    }
-
-    .loading-state {
-      text-align: center;
-      padding: 64px;
-      color: #666;
-    }
-  `]
+  `],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrderDetailsPageComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private store = inject(Store);
-
-  order$ = this.route.paramMap.pipe(
-    switchMap(params => {
-      const id = params.get('id');
-      return this.store.select(selectAllOrders).pipe(
-        map(orders => orders.find(o => o.id === id))
-      );
-    })
-  );
+  
+  order$!: Observable<Order | undefined>;
+  displayedColumns = ['product', 'price', 'quantity', 'total'];
 
   ngOnInit() {
-    // Ensure orders are loaded (if deep linked)
-    // this.store.dispatch(loadOrders()); // Assuming this action exists and handles loading
+    this.order$ = this.route.paramMap.pipe(
+      switchMap(params => {
+        const orderId = params.get('id');
+        return this.store.select(selectAllOrders).pipe(
+          map(orders => orders.find(o => o.id === orderId || o.orderNumber === orderId))
+        );
+      })
+    );
   }
 
-  getStepIndex(status: string): number {
-    switch (status) {
-      case 'Processing': return 0;
-      case 'Shipped': return 1;
-      case 'Delivered': return 2;
-      default: return 0;
-    }
+  getSubtotal(order: Order): number {
+    return order.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  }
+
+  getTaxes(order: Order): number {
+    const subtotal = this.getSubtotal(order);
+    return subtotal * 0.2; // 20% VAT
+  }
+
+  getDiscount(order: Order): number {
+    const subtotal = this.getSubtotal(order);
+    const taxes = this.getTaxes(order);
+    const shipping = 5.99;
+    const calculatedTotal = subtotal + taxes + shipping;
+    return Math.max(0, calculatedTotal - order.total);
+  }
+
+  trackByItem(index: number, item: any): number {
+    return item.productId;
   }
 }

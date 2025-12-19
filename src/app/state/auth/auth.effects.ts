@@ -20,7 +20,10 @@ export class AuthEffects {
           map(({ access, refresh }) => {
             localStorage.setItem('access_token', access);
             localStorage.setItem('refresh_token', refresh);
-            return AuthActions.loginSuccess({ access, refresh });
+            
+            // Decode mock token
+            const payload = JSON.parse(atob(access));
+            return AuthActions.loginSuccess({ access, refresh, user: payload });
           }),
           catchError((error) =>
             of(
@@ -39,9 +42,14 @@ export class AuthEffects {
       ofType(AuthActions.register),
       switchMap(({ name, email, password }) =>
         this.api.register(name, email, password).pipe(
-          map(({ access, refresh }) =>
-            AuthActions.loginSuccess({ access, refresh })
-          ),
+          map(({ access, refresh }) => {
+            localStorage.setItem('access_token', access);
+            localStorage.setItem('refresh_token', refresh);
+
+            // Decode mock token
+            const payload = JSON.parse(atob(access));
+            return AuthActions.loginSuccess({ access, refresh, user: payload });
+          }),
           catchError((error) =>
             of(
               AuthActions.loginFailure({

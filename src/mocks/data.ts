@@ -9,6 +9,7 @@ export interface Product {
   ratings: { user_id: number; value: number }[];
   rating: number;
   stock: number;
+  lowStockThreshold?: number; // ✅ rendu optionnel pour éviter TS2741
   image: string;
   features: string[];
 }
@@ -17,7 +18,8 @@ export const products: Product[] = [
   {
     id: 1,
     name: 'Stylo Bleu Premium',
-    description: 'High quality blue pen for smooth writing. Features an ergonomic grip for comfortable long-term use.',
+    description:
+      'High quality blue pen for smooth writing. Features an ergonomic grip for comfortable long-term use.',
     category: 'Stationery',
     price: 2.5,
     created_at: '2025-01-10T10:00:00Z',
@@ -25,13 +27,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 2, value: 4 }],
     rating: 4,
     stock: 100,
-    image: 'https://images.unsplash.com/photo-1585336261022-680e295ce3fe?auto=format&fit=crop&w=800&q=80',
-    features: ['Smooth ink flow', 'Ergonomic grip', 'Long-lasting', 'Quick drying']
+    lowStockThreshold: 10,
+    image:
+      'https://images.unsplash.com/photo-1585336261022-680e295ce3fe?auto=format&fit=crop&w=800&q=80',
+    features: ['Smooth ink flow', 'Ergonomic grip', 'Long-lasting', 'Quick drying'],
   },
   {
     id: 2,
     name: 'Cahier A5 Luxe',
-    description: 'Premium A5 notebook with lined pages. Perfect for journaling, note-taking, or sketching.',
+    description:
+      'Premium A5 notebook with lined pages. Perfect for journaling, note-taking, or sketching.',
     category: 'Stationery',
     price: 3.9,
     created_at: '2025-02-01T09:30:00Z',
@@ -39,13 +44,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 3, value: 5 }],
     rating: 5,
     stock: 50,
-    image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
-    features: ['100gsm paper', 'Hardcover', 'Elastic closure', 'Ribbon bookmark']
+    lowStockThreshold: 10,
+    image:
+      'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
+    features: ['100gsm paper', 'Hardcover', 'Elastic closure', 'Ribbon bookmark'],
   },
   {
     id: 3,
     name: 'Classeur Rouge Pro',
-    description: 'Durable red binder for organizing documents. Features a robust mechanism and reinforced edges.',
+    description:
+      'Durable red binder for organizing documents. Features a robust mechanism and reinforced edges.',
     category: 'Office',
     price: 4.5,
     created_at: '2025-02-12T12:00:00Z',
@@ -53,13 +61,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 4, value: 3 }],
     rating: 3,
     stock: 20,
-    image: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=800&q=80',
-    features: ['2-ring mechanism', 'Spine label', 'A4 compatible', 'Water-resistant cover']
+    lowStockThreshold: 5,
+    image:
+      'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=800&q=80',
+    features: ['2-ring mechanism', 'Spine label', 'A4 compatible', 'Water-resistant cover'],
   },
   {
     id: 4,
     name: 'Crayon HB Artist',
-    description: 'Standard HB pencil for sketching and writing. Made from high-quality cedar wood.',
+    description:
+      'Standard HB pencil for sketching and writing. Made from high-quality cedar wood.',
     category: 'Art',
     price: 1.2,
     created_at: '2025-03-01T08:45:00Z',
@@ -67,13 +78,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 2, value: 5 }],
     rating: 5,
     stock: 200,
-    image: 'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?auto=format&fit=crop&w=800&q=80',
-    features: ['Break-resistant lead', 'Easy to sharpen', 'Non-toxic', 'Smooth graphite']
+    lowStockThreshold: 20,
+    image:
+      'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?auto=format&fit=crop&w=800&q=80',
+    features: ['Break-resistant lead', 'Easy to sharpen', 'Non-toxic', 'Smooth graphite'],
   },
   {
     id: 5,
     name: 'Règle 30cm Precision',
-    description: 'Clear plastic ruler with metric measurements. Accurate and durable for school or office use.',
+    description:
+      'Clear plastic ruler with metric measurements. Accurate and durable for school or office use.',
     category: 'Stationery',
     price: 1.5,
     created_at: '2025-03-05T07:20:00Z',
@@ -81,8 +95,10 @@ export const products: Product[] = [
     ratings: [{ user_id: 1, value: 4 }],
     rating: 4,
     stock: 15,
-    image: 'https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&w=800&q=80',
-    features: ['Shatterproof', 'Metric & Imperial', 'Beveled edge', 'Transparent']
+    lowStockThreshold: 5,
+    image:
+      'https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&w=800&q=80',
+    features: ['Shatterproof', 'Metric & Imperial', 'Beveled edge', 'Transparent'],
   },
   {
     id: 6,
@@ -95,13 +111,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 3, value: 4 }],
     rating: 4,
     stock: 0,
-    image: 'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=800&q=80',
-    features: ['Dust-free', 'Latex-free', 'Minimal crumbling', 'Protective sleeve']
+    lowStockThreshold: 10,
+    image:
+      'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=800&q=80',
+    features: ['Dust-free', 'Latex-free', 'Minimal crumbling', 'Protective sleeve'],
   },
   {
     id: 7,
     name: 'Surligneur Jaune Neon',
-    description: 'Bright yellow highlighter for key text. Chisel tip for broad highlighting or fine underlining.',
+    description:
+      'Bright yellow highlighter for key text. Chisel tip for broad highlighting or fine underlining.',
     category: 'Office',
     price: 1.7,
     created_at: '2025-03-11T11:00:00Z',
@@ -109,13 +128,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 6, value: 5 }],
     rating: 5,
     stock: 80,
-    image: 'https://images.unsplash.com/photo-1595186938957-c9388206f6eb?auto=format&fit=crop&w=800&q=80',
-    features: ['Super bright ink', 'Chisel tip', 'Smear guard', 'Long cap-off time']
+    lowStockThreshold: 15,
+    image:
+      'https://images.unsplash.com/photo-1595186938957-c9388206f6eb?auto=format&fit=crop&w=800&q=80',
+    features: ['Super bright ink', 'Chisel tip', 'Smear guard', 'Long cap-off time'],
   },
   {
     id: 8,
     name: 'Pochette Plastique A4',
-    description: 'Transparent plastic folder for A4 sheets. Protects documents from dust and moisture.',
+    description:
+      'Transparent plastic folder for A4 sheets. Protects documents from dust and moisture.',
     category: 'Office',
     price: 0.3,
     created_at: '2025-03-12T09:00:00Z',
@@ -123,13 +145,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 3, value: 3 }],
     rating: 3,
     stock: 500,
-    image: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=800&q=80',
-    features: ['Clear visibility', 'Tear-resistant', 'Top opening', 'Acid-free']
+    lowStockThreshold: 50,
+    image:
+      'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=800&q=80',
+    features: ['Clear visibility', 'Tear-resistant', 'Top opening', 'Acid-free'],
   },
   {
     id: 9,
     name: 'Feutre Noir Fin',
-    description: 'Fine point black marker. Ideal for writing, labeling, and detailed drawing.',
+    description:
+      'Fine point black marker. Ideal for writing, labeling, and detailed drawing.',
     category: 'Art',
     price: 2.0,
     created_at: '2025-03-15T10:30:00Z',
@@ -137,13 +162,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 5, value: 4 }],
     rating: 4,
     stock: 60,
-    image: 'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?auto=format&fit=crop&w=800&q=80',
-    features: ['Permanent ink', 'Fine tip', 'Waterproof', 'Quick drying']
+    lowStockThreshold: 10,
+    image:
+      'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?auto=format&fit=crop&w=800&q=80',
+    features: ['Permanent ink', 'Fine tip', 'Waterproof', 'Quick drying'],
   },
   {
     id: 10,
     name: 'Bloc Notes Spiral',
-    description: 'Spiral bound notepad for quick notes. Perforated pages for easy tearing.',
+    description:
+      'Spiral bound notepad for quick notes. Perforated pages for easy tearing.',
     category: 'Stationery',
     price: 3.0,
     created_at: '2025-03-20T16:00:00Z',
@@ -151,13 +179,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 7, value: 5 }],
     rating: 5,
     stock: 40,
-    image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
-    features: ['Top spiral binding', '80 sheets', 'College ruled', 'Sturdy backboard']
+    lowStockThreshold: 10,
+    image:
+      'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
+    features: ['Top spiral binding', '80 sheets', 'College ruled', 'Sturdy backboard'],
   },
   {
     id: 11,
     name: 'Feuilles A4 80g',
-    description: 'Pack of 500 sheets of A4 paper. High white standard office paper.',
+    description:
+      'Pack of 500 sheets of A4 paper. High white standard office paper.',
     category: 'Office',
     price: 4.0,
     created_at: '2025-03-22T12:40:00Z',
@@ -165,13 +196,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 2, value: 4 }],
     rating: 4,
     stock: 100,
-    image: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=800&q=80',
-    features: ['Jam-free', 'High opacity', 'Sustainable source', 'Multipurpose']
+    lowStockThreshold: 20,
+    image:
+      'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=800&q=80',
+    features: ['Jam-free', 'High opacity', 'Sustainable source', 'Multipurpose'],
   },
   {
     id: 12,
     name: 'Trousse Bleue Large',
-    description: 'Spacious blue pencil case. Fits all your essential stationery items.',
+    description:
+      'Spacious blue pencil case. Fits all your essential stationery items.',
     category: 'Accessories',
     price: 6.5,
     created_at: '2025-03-25T13:00:00Z',
@@ -179,13 +213,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 8, value: 5 }],
     rating: 5,
     stock: 25,
-    image: 'https://images.unsplash.com/photo-1585336261022-680e295ce3fe?auto=format&fit=crop&w=800&q=80',
-    features: ['Durable fabric', 'Zipper closure', 'Washable', 'Compact design']
+    lowStockThreshold: 5,
+    image:
+      'https://images.unsplash.com/photo-1585336261022-680e295ce3fe?auto=format&fit=crop&w=800&q=80',
+    features: ['Durable fabric', 'Zipper closure', 'Washable', 'Compact design'],
   },
   {
     id: 13,
     name: 'Colle Bâton Strong',
-    description: 'Strong adhesive glue stick. Washable and safe for children.',
+    description:
+      'Strong adhesive glue stick. Washable and safe for children.',
     category: 'Stationery',
     price: 1.3,
     created_at: '2025-04-01T07:00:00Z',
@@ -193,13 +230,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 9, value: 3 }],
     rating: 3,
     stock: 75,
-    image: 'https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&w=800&q=80',
-    features: ['Solvent-free', 'Washable', 'Smooth application', 'Non-toxic']
+    lowStockThreshold: 15,
+    image:
+      'https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&w=800&q=80',
+    features: ['Solvent-free', 'Washable', 'Smooth application', 'Non-toxic'],
   },
   {
     id: 14,
     name: 'Ruban Adhésif Clear',
-    description: 'Clear adhesive tape roll. Invisible on most paper surfaces.',
+    description:
+      'Clear adhesive tape roll. Invisible on most paper surfaces.',
     category: 'Office',
     price: 2.8,
     created_at: '2025-04-03T08:00:00Z',
@@ -207,13 +247,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 1, value: 4 }],
     rating: 4,
     stock: 90,
-    image: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=800&q=80',
-    features: ['Crystal clear', 'Easy tear', 'Strong hold', 'Yellowing resistant']
+    lowStockThreshold: 15,
+    image:
+      'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=800&q=80',
+    features: ['Crystal clear', 'Easy tear', 'Strong hold', 'Yellowing resistant'],
   },
   {
     id: 15,
     name: 'Stylo Rouge Correction',
-    description: 'Smooth red pen for corrections. Vivid ink color that stands out.',
+    description:
+      'Smooth red pen for corrections. Vivid ink color that stands out.',
     category: 'Stationery',
     price: 2.5,
     created_at: '2025-04-05T10:20:00Z',
@@ -221,13 +264,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 3, value: 5 }],
     rating: 5,
     stock: 100,
-    image: 'https://images.unsplash.com/photo-1585336261022-680e295ce3fe?auto=format&fit=crop&w=800&q=80',
-    features: ['Vivid red ink', 'Comfort grip', 'Retractable', 'No smudging']
+    lowStockThreshold: 15,
+    image:
+      'https://images.unsplash.com/photo-1585336261022-680e295ce3fe?auto=format&fit=crop&w=800&q=80',
+    features: ['Vivid red ink', 'Comfort grip', 'Retractable', 'No smudging'],
   },
   {
     id: 16,
     name: 'Feutres Couleur Pack',
-    description: 'Pack of 10 vibrant color markers. Water-based ink, washable from most fabrics.',
+    description:
+      'Pack of 10 vibrant color markers. Water-based ink, washable from most fabrics.',
     category: 'Art',
     price: 7.9,
     created_at: '2025-04-10T14:00:00Z',
@@ -235,13 +281,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 6, value: 4 }],
     rating: 4,
     stock: 30,
-    image: 'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?auto=format&fit=crop&w=800&q=80',
-    features: ['10 colors', 'Washable ink', 'Ventilated cap', 'Medium tip']
+    lowStockThreshold: 5,
+    image:
+      'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?auto=format&fit=crop&w=800&q=80',
+    features: ['10 colors', 'Washable ink', 'Ventilated cap', 'Medium tip'],
   },
   {
     id: 17,
     name: 'Pinceau Fin Detail',
-    description: 'Fine tip brush for detailed painting. Synthetic bristles that hold their shape.',
+    description:
+      'Fine tip brush for detailed painting. Synthetic bristles that hold their shape.',
     category: 'Art',
     price: 2.2,
     created_at: '2025-04-12T12:30:00Z',
@@ -249,13 +298,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 5, value: 3 }],
     rating: 3,
     stock: 45,
-    image: 'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=800&q=80',
-    features: ['Synthetic bristles', 'Fine point', 'Ergonomic handle', 'Easy to clean']
+    lowStockThreshold: 10,
+    image:
+      'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=800&q=80',
+    features: ['Synthetic bristles', 'Fine point', 'Ergonomic handle', 'Easy to clean'],
   },
   {
     id: 18,
     name: 'Palette Aquarelle Pro',
-    description: 'Watercolor palette with 12 colors. Includes a mixing tray and brush.',
+    description:
+      'Watercolor palette with 12 colors. Includes a mixing tray and brush.',
     category: 'Art',
     price: 9.5,
     created_at: '2025-04-15T11:10:00Z',
@@ -263,13 +315,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 8, value: 5 }],
     rating: 5,
     stock: 10,
-    image: 'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=800&q=80',
-    features: ['12 colors', 'Mixing tray', 'Includes brush', 'High pigment']
+    lowStockThreshold: 3,
+    image:
+      'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=800&q=80',
+    features: ['12 colors', 'Mixing tray', 'Includes brush', 'High pigment'],
   },
   {
     id: 19,
     name: 'Marqueur Effaçable Dry',
-    description: 'Whiteboard marker, easy to erase. Low odor ink, ideal for classrooms and offices.',
+    description:
+      'Whiteboard marker, easy to erase. Low odor ink, ideal for classrooms and offices.',
     category: 'Office',
     price: 3.4,
     created_at: '2025-04-18T09:40:00Z',
@@ -277,13 +332,16 @@ export const products: Product[] = [
     ratings: [{ user_id: 2, value: 4 }],
     rating: 4,
     stock: 55,
-    image: 'https://images.unsplash.com/photo-1595186938957-c9388206f6eb?auto=format&fit=crop&w=800&q=80',
-    features: ['Low odor', 'Dry erase', 'Bullet tip', 'Refillable']
+    lowStockThreshold: 10,
+    image:
+      'https://images.unsplash.com/photo-1595186938957-c9388206f6eb?auto=format&fit=crop&w=800&q=80',
+    features: ['Low odor', 'Dry erase', 'Bullet tip', 'Refillable'],
   },
   {
     id: 20,
     name: 'Tampon Encreur Date',
-    description: 'Self-inking stamp for documents. Adjustable date and custom text.',
+    description:
+      'Self-inking stamp for documents. Adjustable date and custom text.',
     category: 'Office',
     price: 5.0,
     created_at: '2025-04-20T15:00:00Z',
@@ -291,7 +349,9 @@ export const products: Product[] = [
     ratings: [{ user_id: 9, value: 4 }],
     rating: 4,
     stock: 20,
-    image: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=800&q=80',
-    features: ['Self-inking', 'Adjustable date', 'Black ink', 'Durable casing']
+    lowStockThreshold: 5,
+    image:
+      'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=800&q=80',
+    features: ['Self-inking', 'Adjustable date', 'Black ink', 'Durable casing'],
   },
 ];

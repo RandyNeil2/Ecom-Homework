@@ -5,9 +5,13 @@ export const selectCartState = createFeatureSelector<CartState>('cart');
 
 export const selectCartItems = createSelector(selectCartState, (state) => state.items);
 
+// Memoized selector for total cart items (Section 6.3)
 export const selectCartCount = createSelector(selectCartItems, (items) =>
   items.reduce((total, item) => total + item.quantity, 0)
 );
+
+// Alias for selectCartCount (Section 6.3)
+export const selectCartTotalItems = selectCartCount;
 
 export const selectCartTotal = createSelector(selectCartItems, (items) =>
   items.reduce((total, item) => total + item.product.price * item.quantity, 0)

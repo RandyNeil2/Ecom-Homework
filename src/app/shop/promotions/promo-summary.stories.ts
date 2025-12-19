@@ -5,25 +5,64 @@ const meta: Meta<PromoSummaryComponent> = {
   title: 'Shop/PromoSummary',
   component: PromoSummaryComponent,
   tags: ['autodocs'],
+  parameters: {
+    layout: 'centered',
+  },
+  argTypes: {
+    subtotal: {
+      control: { type: 'number', min: 0, step: 0.01 },
+      description: 'Cart subtotal before discounts',
+    },
+    discount: {
+      control: { type: 'number', min: 0, step: 0.01 },
+      description: 'Discount amount applied',
+    },
+    code: {
+      control: 'text',
+      description: 'Promo code applied',
+    },
+  },
 };
 
 export default meta;
 type Story = StoryObj<PromoSummaryComponent>;
 
-export const Default: Story = {
+export const NoDiscount: Story = {
   args: {
     subtotal: 100,
     discount: 0,
-    tax: 20,
-    total: 120,
+    code: '',
   },
 };
 
-export const WithDiscount: Story = {
+export const Welcome10: Story = {
   args: {
     subtotal: 100,
-    discount: 20,
-    tax: 16, // (100-20) * 0.2
-    total: 96,
+    discount: 10,
+    code: 'WELCOME10',
+  },
+};
+
+export const VIP20: Story = {
+  args: {
+    subtotal: 150,
+    discount: 30,
+    code: 'VIP20',
+  },
+};
+
+export const LargeDiscount: Story = {
+  args: {
+    subtotal: 500,
+    discount: 100,
+    code: 'SPECIAL20',
+  },
+};
+
+export const SmallOrder: Story = {
+  args: {
+    subtotal: 25.50,
+    discount: 2.55,
+    code: 'WELCOME10',
   },
 };

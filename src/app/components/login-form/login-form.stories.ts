@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
+import { applicationConfig } from '@storybook/angular';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { LoginFormComponent } from './login-form.component';
 
 const meta: Meta<LoginFormComponent> = {
@@ -11,6 +13,13 @@ const meta: Meta<LoginFormComponent> = {
       handles: ['submit'],
     },
   },
+  decorators: [
+    applicationConfig({
+      providers: [
+        provideAnimations()
+      ],
+    }),
+  ],
   argTypes: {
     submit: {
       action: 'submit',
@@ -25,15 +34,11 @@ type Story = StoryObj<LoginFormComponent>;
 export const Default: Story = {};
 
 export const WithPrefilledValues: Story = {
-  render: (args) => ({
-    props: args,
-    template: `
-      <app-login-form (submit)="submit($event)"></app-login-form>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    // This story demonstrates the form with default empty fields
-    // In a real scenario, you might want to prefill via component inputs
+  parameters: {
+    docs: {
+      description: {
+        story: 'Login form with username and password fields.',
+      },
+    },
   },
 };
-

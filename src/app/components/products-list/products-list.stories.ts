@@ -1,77 +1,58 @@
 import type { Meta, StoryObj } from '@storybook/angular';
+import { applicationConfig } from '@storybook/angular';
+import { provideStore } from '@ngrx/store';
+import { provideRouter } from '@angular/router';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { ProductsListComponent } from './products-list.component';
+import { wishlistReducer } from '../../state/wishlist/wishlist.reducer';
+import { cartReducer } from '../../state/cart/cart.reducer';
 import { Product } from '../../../mocks/data';
 
 const sampleProducts: Product[] = [
   {
     id: 1,
-    name: 'Stylo Bleu',
-    description: 'High quality blue pen',
+    name: 'Stylo Bleu Premium',
+    description: 'High quality blue pen for smooth writing',
     category: 'Stationery',
     price: 2.5,
     created_at: '2025-01-10T10:00:00Z',
     owner_id: 10,
     ratings: [{ user_id: 2, value: 4 }],
     rating: 4,
-    stock: 10,
+    stock: 50,
+    lowStockThreshold: 10,
     image: 'https://images.unsplash.com/photo-1585336261022-680e295ce3fe?auto=format&fit=crop&w=800&q=80',
-    features: ['Feature 1']
+    features: ['Smooth ink', 'Ergonomic']
   },
   {
     id: 2,
-    name: 'Cahier A5',
-    description: 'Premium A5 notebook',
+    name: 'Cahier A5 Luxe',
+    description: 'Premium A5 notebook with lined pages',
     category: 'Stationery',
     price: 3.9,
     created_at: '2025-02-01T09:30:00Z',
     owner_id: 11,
     ratings: [{ user_id: 3, value: 5 }],
     rating: 5,
-    stock: 10,
+    stock: 100,
+    lowStockThreshold: 10,
     image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
-    features: ['Feature 1']
+    features: ['100gsm paper', 'Hardcover']
   },
   {
     id: 3,
-    name: 'Classeur Rouge',
-    description: 'Durable red binder',
-    category: 'Office',
-    price: 4.5,
-    created_at: '2025-02-12T12:00:00Z',
-    owner_id: 12,
-    ratings: [{ user_id: 4, value: 3 }],
-    rating: 3,
-    stock: 10,
-    image: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=800&q=80',
-    features: ['Feature 1']
-  },
-  {
-    id: 4,
-    name: 'Crayon HB',
-    description: 'Standard HB pencil',
+    name: 'Palette Aquarelle Pro',
+    description: 'Professional watercolor palette',
     category: 'Art',
-    price: 1.2,
-    created_at: '2025-03-01T08:45:00Z',
-    owner_id: 13,
-    ratings: [{ user_id: 2, value: 5 }],
+    price: 9.5,
+    created_at: '2025-04-15T11:10:00Z',
+    owner_id: 12,
+    ratings: [{ user_id: 4, value: 5 }],
     rating: 5,
-    stock: 10,
-    image: 'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?auto=format&fit=crop&w=800&q=80',
-    features: ['Feature 1']
-  },
-  {
-    id: 5,
-    name: 'Règle 30cm',
-    description: 'Clear plastic ruler',
-    category: 'Stationery',
-    price: 1.5,
-    created_at: '2025-03-05T07:20:00Z',
-    owner_id: 14,
-    ratings: [{ user_id: 1, value: 4 }],
-    rating: 4,
-    stock: 10,
-    image: 'https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&w=800&q=80',
-    features: ['Feature 1']
+    stock: 5,
+    lowStockThreshold: 10,
+    image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=800&q=80',
+    features: ['12 colors', 'Professional grade']
   },
 ];
 
@@ -82,6 +63,15 @@ const meta: Meta<ProductsListComponent> = {
   parameters: {
     layout: 'padded',
   },
+  decorators: [
+    applicationConfig({
+      providers: [
+        provideStore({ wishlist: wishlistReducer, cart: cartReducer }),
+        provideRouter([]),
+        provideAnimations()
+      ],
+    }),
+  ],
   argTypes: {
     products: {
       control: 'object',
@@ -121,7 +111,7 @@ export const Error: Story = {
   args: {
     products: [],
     loading: false,
-    error: 'Failed to load products',
+    error: 'Failed to load products. Please try again.',
   },
 };
 
@@ -140,4 +130,3 @@ export const SingleProduct: Story = {
     error: null,
   },
 };
-

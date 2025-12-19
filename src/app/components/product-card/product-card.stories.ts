@@ -1,5 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/angular';
+import { applicationConfig } from '@storybook/angular';
+import { provideStore } from '@ngrx/store';
+import { provideRouter } from '@angular/router';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { ProductCardComponent } from './product-card.component';
+import { wishlistReducer } from '../../state/wishlist/wishlist.reducer';
+import { cartReducer } from '../../state/cart/cart.reducer';
 
 const meta: Meta<ProductCardComponent> = {
   title: 'Shop/ProductCard',
@@ -8,7 +14,20 @@ const meta: Meta<ProductCardComponent> = {
   parameters: {
     layout: 'centered',
   },
+  decorators: [
+    applicationConfig({
+      providers: [
+        provideStore({ wishlist: wishlistReducer, cart: cartReducer }),
+        provideRouter([]),
+        provideAnimations()
+      ],
+    }),
+  ],
   argTypes: {
+    id: {
+      control: 'number',
+      description: 'Product ID',
+    },
     name: {
       control: 'text',
       description: 'Product name',
@@ -17,13 +36,21 @@ const meta: Meta<ProductCardComponent> = {
       control: { type: 'number', min: 0, step: 0.1 },
       description: 'Product price in euros',
     },
-    created_at: {
-      control: 'text',
-      description: 'Creation date (ISO string)',
+    stock: {
+      control: { type: 'number', min: 0 },
+      description: 'Available stock quantity',
+    },
+    lowStockThreshold: {
+      control: { type: 'number', min: 1 },
+      description: 'Threshold below which "low stock" warning appears',
     },
     avgRating: {
       control: { type: 'number', min: 0, max: 5, step: 0.1 },
       description: 'Average rating (0-5)',
+    },
+    category: {
+      control: 'text',
+      description: 'Product category',
     },
   },
 };
@@ -33,37 +60,78 @@ type Story = StoryObj<ProductCardComponent>;
 
 export const Default: Story = {
   args: {
-    name: 'Stylo Bleu',
+    id: 1,
+    name: 'Stylo Bleu Premium',
     price: 2.5,
     created_at: '2025-01-10T10:00:00Z',
     avgRating: 4.0,
+    stock: 50,
+    lowStockThreshold: 10,
+    category: 'Stationery',
+  },
+};
+
+export const InStock: Story = {
+  args: {
+    id: 2,
+    name: 'Cahier A5 Luxe',
+    price: 3.9,
+    created_at: '2025-02-01T09:30:00Z',
+    avgRating: 5.0,
+    stock: 100,
+    lowStockThreshold: 10,
+    category: 'Stationery',
+  },
+};
+
+export const LowStock: Story = {
+  args: {
+    id: 3,
+    name: 'Palette Aquarelle Pro',
+    price: 9.5,
+    created_at: '2025-04-15T11:10:00Z',
+    avgRating: 4.8,
+    stock: 5,
+    lowStockThreshold: 10,
+    category: 'Art',
+  },
+};
+
+export const OutOfStock: Story = {
+  args: {
+    id: 4,
+    name: 'Tampon Encreur Date',
+    price: 5.0,
+    created_at: '2025-02-12T12:00:00Z',
+    avgRating: 4.0,
+    stock: 0,
+    lowStockThreshold: 10,
+    category: 'Office',
   },
 };
 
 export const HighRating: Story = {
   args: {
-    name: 'Cahier A5',
-    price: 3.9,
-    created_at: '2025-02-01T09:30:00Z',
+    id: 5,
+    name: 'Classeur Premium',
+    price: 4.5,
+    created_at: '2025-02-12T12:00:00Z',
     avgRating: 5.0,
+    stock: 25,
+    lowStockThreshold: 5,
+    category: 'Office',
   },
 };
 
 export const LowRating: Story = {
   args: {
-    name: 'Classeur Rouge',
-    price: 4.5,
-    created_at: '2025-02-12T12:00:00Z',
+    id: 6,
+    name: 'Basic Notebook',
+    price: 1.99,
+    created_at: '2025-03-01T09:00:00Z',
     avgRating: 2.5,
+    stock: 80,
+    lowStockThreshold: 10,
+    category: 'Stationery',
   },
 };
-
-export const Expensive: Story = {
-  args: {
-    name: 'Palette Aquarelle',
-    price: 9.5,
-    created_at: '2025-04-15T11:10:00Z',
-    avgRating: 4.8,
-  },
-};
-

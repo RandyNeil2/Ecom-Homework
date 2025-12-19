@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
@@ -11,7 +12,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { selectAllOrders } from '../../../state/orders/orders.selectors';
-import { loadOrders } from '../../../state/orders/orders.actions';
+import { loadOrders, Order } from '../../../state/orders/orders.actions';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-orders-list-page',
@@ -19,6 +22,7 @@ import { loadOrders } from '../../../state/orders/orders.actions';
   imports: [
     CommonModule,
     RouterModule,
+    FormsModule,
     MatTableModule,
     MatChipsModule,
     MatButtonModule,
@@ -40,22 +44,24 @@ import { loadOrders } from '../../../state/orders/orders.actions';
           <mat-form-field class="search-field">
             <mat-icon matPrefix>search</mat-icon>
             <mat-label>Search orders</mat-label>
-            <input matInput placeholder="Order # or Product Name">
+            <input matInput placeholder="Order # or Product Name" 
+                   [(ngModel)]="searchQuery" 
+                   (ngModelChange)="onSearchChange($event)">
           </mat-form-field>
 
           <mat-form-field class="status-filter">
             <mat-label>Status</mat-label>
-            <mat-select value="all">
+            <mat-select [(value)]="selectedStatus" (selectionChange)="onStatusChange($event.value)">
               <mat-option value="all">All Statuses</mat-option>
-              <mat-option value="processing">Processing</mat-option>
-              <mat-option value="shipped">Shipped</mat-option>
-              <mat-option value="delivered">Delivered</mat-option>
+              <mat-option value="Processing">Processing</mat-option>
+              <mat-option value="Shipped">Shipped</mat-option>
+              <mat-option value="Delivered">Delivered</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
 
         <div class="table-container">
-          <table mat-table [dataSource]="(orders$ | async) || []" class="full-width">
+          <table mat-table [dataSource]="(filteredOrders$ | async) || []" class="full-width">
             
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef> Order # </th>
@@ -94,9 +100,12 @@ import { loadOrders } from '../../../state/orders/orders.actions';
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="order-row"></tr>
           </table>
 
-          <div *ngIf="(orders$ | async)?.length === 0" class="empty-state">
+          <div *ngIf="(filteredOrders$ | async)?.length === 0" class="empty-state">
             <mat-icon>shopping_bag</mat-icon>
             <p>No orders found</p>
+            <p class="hint" *ngIf="selectedStatus !== 'all' || searchQuery">
+              Try adjusting your filters
+            </p>
           </div>
         </div>
       </mat-card>
@@ -224,15 +233,63 @@ import { loadOrders } from '../../../state/orders/orders.actions';
       margin-bottom: 16px;
       opacity: 0.5;
     }
+
+    .empty-state .hint {
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrdersListPageComponent implements OnInit {
   private store = inject(Store);
+  
   orders$ = this.store.select(selectAllOrders);
   displayedColumns = ['id', 'date', 'total', 'status', 'actions'];
+  
+  // Filter state
+  selectedStatus = 'all';
+  searchQuery = '';
+  
+  private statusFilter$ = new BehaviorSubject<string>('all');
+  private searchFilter$ = new BehaviorSubject<string>('');
+  
+  // Combined filtered orders
+  filteredOrders$ = combineLatest([
+    this.orders$,
+    this.statusFilter$,
+    this.searchFilter$
+  ]).pipe(
+    map(([orders, status, search]) => {
+      return orders.filter(order => {
+        // Status filter
+        const matchesStatus = status === 'all' || order.status === status;
+        
+        // Search filter
+        const searchLower = search.toLowerCase();
+        const matchesSearch = !search || 
+          order.orderNumber.toLowerCase().includes(searchLower) ||
+          order.id.toLowerCase().includes(searchLower) ||
+          order.items.some(item => item.productName.toLowerCase().includes(searchLower));
+        
+        return matchesStatus && matchesSearch;
+      });
+    })
+  );
 
   ngOnInit() {
     this.store.dispatch(loadOrders());
+  }
+  
+  onStatusChange(status: string) {
+    this.statusFilter$.next(status);
+  }
+  
+  onSearchChange(query: string) {
+    this.searchFilter$.next(query);
+  }
+  
+  trackByOrder(index: number, order: Order): string {
+    return order.id;
   }
 }

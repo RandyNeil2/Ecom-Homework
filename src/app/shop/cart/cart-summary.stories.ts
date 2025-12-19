@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
+import { applicationConfig } from '@storybook/angular';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { CartSummaryComponent } from './cart-summary.component';
 
 const meta: Meta<CartSummaryComponent> = {
@@ -8,6 +10,13 @@ const meta: Meta<CartSummaryComponent> = {
   parameters: {
     layout: 'centered',
   },
+  decorators: [
+    applicationConfig({
+      providers: [
+        provideAnimations()
+      ],
+    }),
+  ],
   argTypes: {
     total: {
       control: { type: 'number', min: 0, step: 0.01 },
@@ -42,4 +51,3 @@ export const ZeroTotal: Story = {
     total: 0,
   },
 };
-
